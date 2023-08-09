@@ -293,13 +293,9 @@ Usage - Inline
 @Unicoderbot 157830
 
 You can share Your codex with others users!. Use below buttons to get link"""
-    buttons = [[Button.inline(i, data=f"set_{i}")] for i in userdict.keys()]
-    if len(userdict.keys()) > 1:
-        buttons += [[Button.inline("All", data="all_w")]]
-    await event.reply(
-        text,
-        buttons=buttons,
-    )
+    if len(userdict.keys()) == 0:
+        return await event.reply(text+"\n/random or /addcodex")
+    await event.reply(text, buttons=[[Button.inline(i, data=f"set_{i}")] for i in userdict.keys()]+[[Button.inline("All", data="all_w")]])
 
 @ascii.on(events.CallbackQuery(pattern="(set|all|back)_(\w+)"))
 async def sharecode(event):
@@ -307,14 +303,11 @@ async def sharecode(event):
     i = event.pattern_match.group(2).decode("UTF-8")
     usersdata = pickle.load(open('users.pkl', 'rb'))
     userdict = usersdata[event.sender_id]
-    buttons = [[Button.inline(i, data=f"set_{i}")] for i in userdict.keys()]
-    if len(userdict.keys()) > 1:
-        buttons += [[Button.inline("All", data="all_w")]]
     if types == "all":
         all_set = "all_" + "_".join([f"{en_de_set(i)}-{en_de_set(str(o), kisko='codex')}" for i, o in userdict.items()])
         await event.edit(
             f"Share this link to your friends to have same Codex\n\nt.me/AsciiRobot?start={all_set}",
-            buttons=buttons+[[Button.inline("Back", data="back_w")]],
+            buttons=[[Button.inline("Back", data="back_w")]],
         )
     elif types == "back":
         text = """Ascii settings are simple similar to name and password
@@ -338,13 +331,13 @@ Usage - Inline
 @Unicoderbot 157830
 
 You can share Your codex with others users!. Use below buttons to get link"""
-        await event.edit(
-            text,
-            buttons=buttons,
-        )
+        if len(userdict.keys()) == 0:
+            return await event.edit(text+"\n/random or /addcodex")
+        await event.edit(text, buttons=[[Button.inline(i, data=f"set_{i}")] for i in userdict.keys()]+[[Button.inline("All", data="all_w")]])
+
     else:
         o = userdict[i]
-        await event.edit(f"Share this link to your friends to have same Codex \"{i}\"\n\nt.me/AsciiRobot?start=set_{en_de_set(i)}-{en_de_set(str(o), kisko='codex')}", buttons=buttons+[[Button.inline("back", data="back_w")]],)
+        await event.edit(f"Share this link to your friends to have same Codex \"{i}\"\n\nt.me/AsciiRobot?start=set_{en_de_set(i)}-{en_de_set(str(o), kisko='codex')}", buttons=[[Button.inline("back", data="back_w")]],)
 
 @ascii.on(events.NewMessage(incoming=True, pattern="/start (all|set)_(.*)", func=lambda e: e.is_private))
 async def directdecrypt(event):
