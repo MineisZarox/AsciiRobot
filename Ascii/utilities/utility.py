@@ -20,8 +20,8 @@ def install_pip(pipfile):
 
 def load_module(plugin_name, p_path=None):
     if p_path is None:
-        path = Path(f"Pixiv/plugins/{plugin_name}.py")
-        name = "Pixiv.plugins.{}".format(plugin_name)
+        path = Path(f"Ascii/plugins/{plugin_name}.py")
+        name = "Ascii.plugins.{}".format(plugin_name)
     else:
         path = Path(f"{p_path}/{plugin_name}.py")
         name = f"{p_path}/{plugin_name}".replace("/", ".")
@@ -29,12 +29,12 @@ def load_module(plugin_name, p_path=None):
     load = importlib.util.module_from_spec(spec)
     load.logger = logging.getLogger(plugin_name)
     spec.loader.exec_module(load)
-    sys.modules["Pixiv.plugins." + plugin_name] = load
+    sys.modules["Ascii.plugins." + plugin_name] = load
     print("★ Successfully Installed: " + plugin_name)
     
 #from catuserbot
 def load_plugins(folder):
-    path = f"Pixiv/{folder}/*.py"
+    path = f"Ascii/{folder}/*.py"
     files = glob.glob(path)
     files.sort()
     for name in files:
@@ -48,7 +48,7 @@ def load_plugins(folder):
                     try:
                         load_module(
                             shortname.replace(".py", ""),
-                            p_path=f"Pixiv/{folder}",
+                            p_path=f"Ascii/{folder}",
                         )
                         break
                     except ModuleNotFoundError as e:

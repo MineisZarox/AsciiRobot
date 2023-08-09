@@ -3,11 +3,9 @@ from .. import Vars
 from telethon.tl.types import ChannelParticipantsAdmins
 
 def auth_(user):
-    authorized = []
-    authorized.append(int(Vars.OWNER_ID))
+    authorized = [int(Vars.OWNER_ID)]
     ids = Vars.SUDO_IDS.split(' ')
-    for id in ids:
-        authorized.append(int(id))
+    authorized.extend(int(id) for id in ids)
     return authorized
 
 def check_auth(func):
@@ -40,10 +38,10 @@ def check_admin(func):
 def check_blocked(func):
     async def wrapper(event: events):
         chat = event.chat_id
-        list = []
+        lisst = []
         ids = int(Vars.BLOCKED_CHAT).split(' ')
         for id in ids:
-            list.append(int(id))
-        if chat not in list: return await event.reply("This function cant be used for the given group. You can ask further queries in support group")
+            lisst.append(int(id))
+        if chat not in lisst: return await event.reply("This function cant be used for the given group. You can ask further queries in support group")
         else: await func(event)
     return wrapper

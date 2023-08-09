@@ -6,4 +6,3 @@ class chivar(object):
     OWNER_ID = 0
     SUDO_IDS = "0"
     LOGGER_GRP = LOG_GRP = 0
-    TOKEN = ""
