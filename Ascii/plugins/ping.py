@@ -1,4 +1,3 @@
-
 import sys
 import traceback
 import asyncio 
@@ -10,17 +9,17 @@ from telethon import events, Button
 from .. import ascii, Vars
 from telethon.errors import rpcbaseerrors
 
-async def charloop(rl, user):
+async def chrloop(rl, user):
     l = 0
     while l <= 600:
         rloop = ""
-        for _ in range(21):
-            ir = random.randint(0, 11000)
+        for _ in range(36):
+            ir = random.randint(33, 11000)
             char = chr(ir)
             rloop += f"{char}"
         rloop += "    "
         await rl.edit(
-            f"Hi [{user.first_name}](tg://user?id={user.id})\nI'm ascii bot to encode any given text in unicode characters[\u200d](https://telegra.ph/file/d2adbd7a528b847e724b7.jpg)\nStart with tring /help\n\n{rloop}",
+            f"Hi [{user.first_name}](tg://user?id={user.id})\nI'm ascii bot to encode any given text in unicode characters[\u200d](https://telegra.ph/file/d2adbd7a528b847e724b7.jpg)\nStart with /help\n\n{rloop}",
             buttons=[
                 [
                     Button.switch_inline(
@@ -30,6 +29,7 @@ async def charloop(rl, user):
                 [Button.url("Updates", "https://t.me/execal")],
                 [Button.url("Dev", "https://t.me/zarox")],
             ],
+            link_preview=True
         )
         await asyncio.sleep(0.2)
         l += 600
@@ -55,7 +55,7 @@ async def delete_module(event):
         
     
 
-@ascii.on(events.NewMessage(incoming=True, pattern="f^/start({Vars.BOT_USERNAME})?$", func=lambda e: e.is_private))
+@ascii.on(events.NewMessage(incoming=True, pattern=f"^/start({Vars.BOT_USERNAME})?$",))
 async def start(event):
     user = await ascii.get_entity(int(event.sender.id))
     usersdata = pickle.load(open('users.pkl', 'rb'))
@@ -64,9 +64,9 @@ async def start(event):
         usersdata[event.sender_id] = {}
     with open('users.pkl', 'wb') as f:
         pickle.dump(usersdata, f)
-    await ascii.send_message(int(Vars.OWNER_ID), f"#START\n**User**: [{user.first_name}](tg://user?id={user.id})\n**Username**: {user.username}\n**ID**: {user.id}")
+    await ascii.send_message(int(Vars.LOG_GRP), f"#START\n**User**: [{user.first_name}](tg://user?id={user.id})\n**Username**: {user.username}\n**ID**: {user.id}")
     rl = await event.respond(
-        f"Hi [{user.first_name}](tg://user?id={user.id})\nI'm ascii bot to encode any given text in unicode characters",
+        f"Hi [{user.first_name}](tg://user?id={user.id})\nI'm ascii bot to encode any given text in unicode characters[\u200d](https://telegra.ph/file/d2adbd7a528b847e724b7.jpg)\nStart with /help\n\nḌᡋᇱ᱗\̃৐࿗ȓͯࢎ⛍⣤⏆ᗖҖᄱ᰼ᥔೊᙃ",
         buttons=[
             [
                 Button.switch_inline(
@@ -76,10 +76,12 @@ async def start(event):
             [Button.url("Updates", "https://t.me/execal")],
             [Button.url("Dev", "https://t.me/zarox")],
         ],
+        link_preview=True
     )
+    await asyncio.sleep(7)
     k = 0
-    while k <= 600:
-        await charloop(rl, user)
+    while k <= 300:
+        await chrloop(rl, user)
         await asyncio.sleep(1)
         k += 1
 
@@ -99,7 +101,7 @@ async def logger(event):
 @ascii.on(events.NewMessage(incoming=True, pattern="^/restart kana"))
 @check_auth
 async def delee_module(event):
-    cmd = ""
+    cmd = "screen -S iris -X stuff '^C python -m Zarox\n'"
     process = await asyncio.create_subprocess_shell(
     cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
     )
@@ -109,4 +111,3 @@ async def delee_module(event):
     await asyncio.sleep(7)
     await event.reply("Restarted Kana Successfully..")
     print("Restarted Kana Successfully..")
-    
